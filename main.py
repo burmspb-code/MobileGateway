@@ -1,7 +1,7 @@
 """Точка входа в приложение."""
 
 import flet as ft
-from core.config import settings
+from src.core.config import settings
 from ui.main_window import MainWindow
 
 

@@ -6,7 +6,7 @@ import flet as ft
 class MainWindow(ft.Column):
     def __init__(self, page: ft.Page):
         super().__init__()
-        self.page = page
+        self._page = page
         self.expand = True
         self.spacing = 16
         self.scroll = ft.ScrollMode.AUTO

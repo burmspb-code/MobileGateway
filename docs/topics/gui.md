@@ -16,7 +16,7 @@ created: 2026-11-24
 - `README.md` приведён в соответствие с актуальной структурой проекта и командами Poetry/Flet.
 - Подготовлен план тестового образца в `docs/step_1.md`.
 - Приведён каркас к согласованному состоянию: `main.py` импортирует настройки из `src.core.config`, `src/core/config.py` содержит `Settings`, пустой `src/core/settings.py` удалён, в `MainWindow` ссылка на страницу хранится в `self._page`.
-- `.idea/mobilegateway.iml` убран из отслеживания Git (каталог `.idea/` уже в `.gitignore`).
+- Каталог `.idea/` убран из отслеживания Git (локальные файлы сохранены, `.idea/` уже в `.gitignore`).
 
 ## Блокировка
 нет
@@ -31,7 +31,7 @@ created: 2026-11-24
 - `src/core/config.py`
 - `src/core/settings.py`
 - `src/ui/main_window.py`
-- `.idea/mobilegateway.iml`
+- `.idea/` (убран из Git)
 
 ## Затронутые темы
 - [Старт](start.md) — README приведён в соответствие; каркасные файлы (`main.py`, `src/core/config.py`, `src/core/settings.py`, `src/ui/main_window.py`) скорректированы для подготовки тестового образца.

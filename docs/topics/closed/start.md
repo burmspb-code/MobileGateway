@@ -1,6 +1,6 @@
 ---
 title: Старт
-status: active
+status: closed
 created: 2026-11-24
 ---
 
@@ -16,12 +16,13 @@ created: 2026-11-24
 - Добавлен базовый каркас приложения: `pyproject.toml`/`poetry.lock`, `main.py`, `src/core/config.py`, `src/core/settings.py`, `src/ui/main_window.py`, пакетные `__init__.py`, `tests/__init__.py`.
 - Добавлены `.env.sample`, `README.md`, `ИНСТРУКЦИЯ.md`, `КОМАНДЫ.md`.
 - В `docs/INDEX.md` задана команда тестов: `poetry run pytest -q; if ($LASTEXITCODE -eq 5) { exit 0 } exit $LASTEXITCODE` (exit code 5 = нет тестов, не ошибка).
+- Тема закрыта 2026-11-25: каркас передан в тему «Разработка GUI», затем — в тему «Реализация шага №2».
 
 ## Блокировка
 нет
 
 ## Следующий шаг
-Уточнить правила проекта в `docs/INDEX.md` (команда тестов, источник истины, запреты) и определить следующую рабочую тему.
+нет (тема закрыта 2026-11-25; уточнение правил проекта в `docs/INDEX.md` остаётся вне шага 2).
 
 ## Файлы
 - `AGENTS.md`
@@ -36,7 +37,7 @@ created: 2026-11-24
 - `docs/topics/INDEX.md`
 - `docs/topics/_template.md`
 - `docs/topics/closed/INDEX.md`
-- `docs/topics/start.md`
+- `docs/topics/closed/start.md`
 - `main.py`
 - `poetry.lock`
 - `pyproject.toml`
@@ -52,9 +53,10 @@ created: 2026-11-24
 - `КОМАНДЫ.md`
 
 ## Затронутые темы
-- _нет_
+- [Разработка GUI](gui.md) — закрыта 2026-11-25; каркасные файлы переданы в тему «Реализация шага №2», проверить при возобновлении.
 
 ## Связи
 - 2026-11-24 [Разработка GUI](gui.md): README обновлён под актуальную структуру/Poetry — проверить, не нужно ли дополнить описание при изменении структуры.
 - 2026-11-24 [Разработка GUI](gui.md): затронуты `docs/handoff.md`, `docs/topics/INDEX.md` при фиксации прогресса темы — проверить актуальность при следующем старте.
 - 2026-11-24 [Разработка GUI](gui.md): затронуты `main.py`, `src/core/config.py`, `src/core/settings.py`, `src/ui/main_window.py` при подготовке каркаса под тестовый образец — проверить при возвращении к теме.
+- 2026-11-25 [Реализация шага №2](../step_2.md): тема закрыта, `main.py`, `src/core/config.py`, `src/ui/main_window.py`, `docs/topics/INDEX.md`, `docs/handoff.md` переданы в новую тему — проверить при возобновлении.

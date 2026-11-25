@@ -2,7 +2,7 @@
 
 import flet as ft
 from src.core.config import settings
-from ui.main_window import MainWindow
+from src.ui.main_window import MainWindow
 
 
 async def main(page: ft.Page):

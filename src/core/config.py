@@ -2,8 +2,13 @@ import os
 from dataclasses import dataclass
 from dotenv import load_dotenv
 
-# Загружаем переменные из локального файла .env (если он существует в корне проекта)
-load_dotenv()
+# Загружаем переменные из локального файла .env (если он существует в корне проекта).
+# В упакованном мобильном приложении find_dotenv() может выбросить AssertionError,
+# поэтому ошибку загрузки .env безопасно игнорируем — используются значения по умолчанию.
+try:
+    load_dotenv()
+except Exception:
+    pass
 
 
 @dataclass(frozen=True)

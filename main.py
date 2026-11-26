@@ -2,7 +2,9 @@
 
 import flet as ft
 
+from src.core.api_client import ApiClient
 from src.core.config import settings
+from src.core.settings_store import SettingsStore
 from src.ui.app_shell import AppShell
 
 
@@ -11,7 +13,14 @@ async def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.SYSTEM
     page.bgcolor = ft.Colors.SURFACE_CONTAINER_LOW
 
-    shell = AppShell(page, app_title=settings.app_title)
+    store = SettingsStore(page)
+    api_client = ApiClient()
+    shell = AppShell(
+        page,
+        app_title=settings.app_title,
+        settings_store=store,
+        api_client=api_client,
+    )
     page.add(shell)
 
 

@@ -224,3 +224,6 @@ chrome_user_profile/**
 .qodo/
 
 data/
+
+# Local app settings fallback (may contain token)
+connection_settings.json

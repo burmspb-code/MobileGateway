@@ -115,4 +115,8 @@ class HomeView(ft.Column):
             self.connection_status.color = ft.Colors.ON_SECONDARY_CONTAINER
             self.actions_card.visible = False
 
-        self.update()
+        try:
+            self.update()
+        except RuntimeError:
+            # Контрол ещё не добавлен на страницу (например, при инициализации shell).
+            pass

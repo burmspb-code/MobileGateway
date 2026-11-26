@@ -60,3 +60,4 @@ created: 2026-11-24
 - 2026-11-24 [Разработка GUI](gui.md): затронуты `docs/handoff.md`, `docs/topics/INDEX.md` при фиксации прогресса темы — проверить актуальность при следующем старте.
 - 2026-11-24 [Разработка GUI](gui.md): затронуты `main.py`, `src/core/config.py`, `src/core/settings.py`, `src/ui/main_window.py` при подготовке каркаса под тестовый образец — проверить при возвращении к теме.
 - 2026-11-25 [Реализация шага №2](../step_2.md): тема закрыта, `main.py`, `src/core/config.py`, `src/ui/main_window.py`, `docs/topics/INDEX.md`, `docs/handoff.md` переданы в новую тему — проверить при возобновлении.
+- 2026-11-27 [Реализация шага №2](step_2.md): тема закрыта, при финализации затронуты `docs/topics/INDEX.md`, `docs/handoff.md` — проверить актуальность при возобновлении.

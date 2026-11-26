@@ -1,26 +1,27 @@
 """Точка входа в приложение."""
 
 import flet as ft
+
+from src.core.api_client import ApiClient
 from src.core.config import settings
-from src.ui.main_window import MainWindow
+from src.core.settings_store import SettingsStore
+from src.ui.app_shell import AppShell
 
 
 async def main(page: ft.Page):
-    # Глобальные настройки страницы
     page.title = settings.app_title
     page.theme_mode = ft.ThemeMode.SYSTEM
-    page.padding = 20
+    page.bgcolor = ft.Colors.SURFACE_CONTAINER_LOW
 
-    # Верхняя панель приложения (AppBar)
-    page.appbar = ft.AppBar(
-        title=ft.Text(settings.app_title),
-        center_title=False,
-        bgcolor=ft.Colors.SURFACE_CONTAINER_HIGHEST,
+    store = SettingsStore(page)
+    api_client = ApiClient()
+    shell = AppShell(
+        page,
+        app_title=settings.app_title,
+        settings_store=store,
+        api_client=api_client,
     )
-
-    # Инициализируем и добавляем главное окно
-    main_window = MainWindow(page)
-    page.add(main_window)
+    page.add(shell)
 
 
 if __name__ == "__main__":

@@ -64,21 +64,63 @@ class AppShell(ft.Column):
         )
         self.controls = [self.content_host]
 
+        self._checking_connection = False
         self._sync_home_summary()
+        if self.connection_settings.api_url:
+            self._page.run_task(self._refresh_connection_status)
 
     def open_settings(self):
         self.current_view = "settings"
         self._render()
 
     def _go_back(self, e):
+        if self.current_view == "settings" and self.settings_view.has_unsaved_changes():
+            self._confirm_leave_settings()
+            return
+        self._navigate_home()
+
+    def _navigate_home(self):
         self.current_view = self.current_primary
         self._render()
+        if self.current_view == "home" and self.connection_settings.api_url:
+            self._page.run_task(self._refresh_connection_status)
+
+    def _confirm_leave_settings(self):
+        dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Несохранённые изменения"),
+            content=ft.Text("Сохранить настройки перед выходом?"),
+            actions=[
+                ft.TextButton("Не сохранять", on_click=lambda e: self._discard_settings(dialog)),
+                ft.TextButton("Отмена", on_click=lambda e: self._cancel_leave(dialog)),
+                ft.FilledButton("Сохранить", on_click=lambda e: self._save_and_leave(dialog)),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        self._page.show_dialog(dialog)
+
+    def _discard_settings(self, dialog):
+        self.settings_view.revert()
+        self._page.pop_dialog()
+        self._navigate_home()
+
+    def _cancel_leave(self, dialog):
+        self._page.pop_dialog()
+
+    def _save_and_leave(self, dialog):
+        if self.settings_view.save_settings():
+            self._page.pop_dialog()
+            self._navigate_home()
+        else:
+            self._page.pop_dialog()
 
     def _on_settings_saved(self, settings: ConnectionSettings):
         self.connection_settings = settings
         if self.settings_store:
             self.settings_store.save(settings)
         self._sync_home_summary()
+        if self.connection_settings.api_url:
+            self._page.run_task(self._refresh_connection_status)
 
     async def _on_check_connection(self, settings: ConnectionSettings):
         if self.api_client is None:
@@ -104,16 +146,55 @@ class AppShell(ft.Column):
         settings = self.connection_settings
         if settings.api_url:
             self.home_view.set_connection_summary(
-                status="Сохранено",
-                details=f"Адрес: {settings.api_url}\nEndpoint: {settings.health_endpoint}",
+                status="Не подключено",
+
+                details=f"Адрес: {settings.api_url}\nПроверяем подключение...",
+
                 is_configured=True,
             )
         else:
             self.home_view.set_connection_summary(
                 status="Не настроено",
+
                 details="Адрес сервера не задан. Откройте настройки для подключения.",
+
                 is_configured=False,
             )
+
+    async def _refresh_connection_status(self):
+        if self._checking_connection or not self.connection_settings.api_url:
+            return
+        if self.api_client is None:
+            return
+
+        self._checking_connection = True
+        try:
+            self.home_view.set_connection_summary(
+                status="Не подключено",
+
+                details=f"Адрес: {self.connection_settings.api_url}\nПроверяем подключение...",
+
+                is_configured=True,
+            )
+            result = await self.api_client.check_health(self.connection_settings)
+            if result.ok:
+                self.home_view.set_connection_summary(
+                    status="Подключено",
+
+                    details=f"Адрес: {self.connection_settings.api_url}\n{result.message}",
+
+                    is_configured=True,
+                )
+            else:
+                self.home_view.set_connection_summary(
+                    status="Ошибка подключения",
+
+                    details=f"Адрес: {self.connection_settings.api_url}\n{result.message}",
+
+                    is_configured=True,
+                )
+        finally:
+            self._checking_connection = False
 
     def _render(self):
         if self.current_view == "settings":

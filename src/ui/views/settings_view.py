@@ -15,7 +15,8 @@ class SettingsView(ft.Column):
         self.scroll = ft.ScrollMode.AUTO
         self.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
-        initial = initial or ConnectionSettings()
+        initial = (initial or ConnectionSettings()).normalized()
+        self._saved = initial
 
         self.api_url = ft.TextField(
             label="Адрес сервера",
@@ -129,6 +130,27 @@ class SettingsView(ft.Column):
 
         self.controls = [form_card, self.result_card]
 
+    def has_unsaved_changes(self) -> bool:
+        current = ConnectionSettings(
+            api_url=self.api_url.value or "",
+            api_token=self.api_token.value or "",
+            health_endpoint=self.health_endpoint.value or "/health",
+            timeout=self._parse_timeout(),
+        ).normalized()
+        return current != self._saved
+
+    def revert(self):
+        self._apply_normalized(self._saved)
+        self._show_message("????????? ?? ?????????.", error=False)
+        self.update()
+
+    def _parse_timeout(self) -> float:
+        timeout_raw = (self.timeout.value or "").strip()
+        try:
+            return float(timeout_raw)
+        except ValueError:
+            return self._saved.timeout
+
     def _read_form(self) -> tuple[ConnectionSettings | None, list[str]]:
         errors: list[str] = []
         timeout_raw = (self.timeout.value or "").strip()
@@ -165,16 +187,22 @@ class SettingsView(ft.Column):
             str(int(settings.timeout)) if settings.timeout.is_integer() else str(settings.timeout)
         )
 
-    def _save(self, e):
+    def save_settings(self) -> bool:
+        """Валидирует и сохраняет настройки. Возвращает True при успехе."""
         settings, errors = self._read_form()
         if errors:
             self._show_errors(errors)
-            return
+            return False
 
         self._apply_normalized(settings)
+        self._saved = settings
         self._show_message("Настройки сохранены.")
         if self.on_save:
             self.on_save(settings)
+        return True
+
+    def _save(self, e):
+        self.save_settings()
 
     async def _check(self, e):
         settings, errors = self._read_form()

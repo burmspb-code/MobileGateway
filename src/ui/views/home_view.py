@@ -13,17 +13,16 @@ class HomeView(ft.Column):
         # Растягиваем все карточки на всю ширину экрана
         self.horizontal_alignment = ft.CrossAxisAlignment.STRETCH
 
-        self.connection_status = ft.Text(
-            "Не настроено",
-            size=12,
-            weight=ft.FontWeight.W_600,
-            color=ft.Colors.ON_SECONDARY_CONTAINER,
+        self.status_dot = ft.Container(
+            width=14,
+            height=14,
+            border_radius=7,
+            bgcolor=ft.Colors.GREY_400,
+            tooltip="Не настроено",
         )
         self.status_badge = ft.Container(
-            content=self.connection_status,
-            bgcolor=ft.Colors.SECONDARY_CONTAINER,
-            padding=ft.Padding.symmetric(horizontal=10, vertical=4),
-            border_radius=12,
+            content=self.status_dot,
+            padding=0,
         )
 
         self.connection_details = ft.Text(
@@ -71,11 +70,14 @@ class HomeView(ft.Column):
                         controls=[
                             ft.Row(
                                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                                 controls=[
                                     ft.Text(
                                         "Подключение к серверу",
                                         size=18,
                                         weight=ft.FontWeight.W_600,
+                                        expand=True,
+                                        no_wrap=False,
                                     ),
                                     self.status_badge,
                                 ],
@@ -101,22 +103,18 @@ class HomeView(ft.Column):
         self.on_open_settings()
 
     def set_connection_summary(self, status: str, details: str, is_configured: bool = False):
-        """Обновляет статус подключения и показывает блок действий при готовности."""
-        self.connection_status.value = status
+        """Обновляет статус подключения: зелёный при 200, иначе красный."""
         self.connection_details.value = details
+        self.status_dot.tooltip = status
 
-        # Меняем цвет бейджа и показываем блок действий, когда сервер настроен
-        if is_configured:
-            self.status_badge.bgcolor = ft.Colors.PRIMARY_CONTAINER
-            self.connection_status.color = ft.Colors.ON_PRIMARY_CONTAINER
-            self.actions_card.visible = True
+        if status == "Подключено":
+            self.status_dot.bgcolor = ft.Colors.GREEN_500
         else:
-            self.status_badge.bgcolor = ft.Colors.SECONDARY_CONTAINER
-            self.connection_status.color = ft.Colors.ON_SECONDARY_CONTAINER
-            self.actions_card.visible = False
+            self.status_dot.bgcolor = ft.Colors.RED_500
+
+        self.actions_card.visible = is_configured
 
         try:
             self.update()
         except RuntimeError:
-            # Контрол ещё не добавлен на страницу (например, при инициализации shell).
             pass
